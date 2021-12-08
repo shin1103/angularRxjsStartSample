@@ -1,0 +1,8 @@
+<p>イベント型サンプル</p>
+
+<input type="text" id="firstTextbox" (input)="inputFirstTextbox($event)">
+<input type="text" id="secondTextbox" (input)="inputSecondTextbox($event)">
+
+<div *ngIf="!isValidInput()" style="color: red;">
+入力値が設定されていません。
+</div>

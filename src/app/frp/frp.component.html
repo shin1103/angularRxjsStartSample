@@ -1,0 +1,8 @@
+<p>FRP型サンプル</p>
+
+<input type="text" id="firstTextbox">
+<input type="text" id="secondTextbox">
+
+<div *ngIf="!(isvalidInput$ | async) " style="color: red;">
+入力値が設定されていません。
+</div> 
