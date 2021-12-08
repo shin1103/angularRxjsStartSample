@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { fromEvent, tap } from 'rxjs';
+import { fromEvent, map } from 'rxjs';
 
 @Component({
   selector: 'app-frp-no-synthetic',
@@ -13,20 +13,32 @@ export class FrpNoSyntheticComponent implements OnInit {
   firstTextboxValue: any = '';
   secondTextboxValue: any = '';
 
+  isValidInput: boolean = false;
+
   ngOnInit(): void {
     const firstTextbox = document.getElementById('firstTextbox') as HTMLInputElement;
     const secondTextbox = document.getElementById('secondTextbox') as HTMLInputElement;
 
-    fromEvent(firstTextbox, 'input').subscribe((event) => {
-      this.firstTextboxValue = (event.target as any).value;
-    });
+    fromEvent(firstTextbox, 'input')
+      .pipe(
+        map<Event, boolean>((event) => {
+          this.firstTextboxValue = (event.target as any).value;
+          return !(this.firstTextboxValue === '' || this.secondTextboxValue === '');
+        })
+      )
+      .subscribe((isValid) => {
+        this.isValidInput = isValid;
+      });
 
-    fromEvent(secondTextbox, 'input').subscribe((event) => {
-      this.secondTextboxValue = (event.target as any).value;
-    });
-  }
-
-  isValidInput(): boolean {
-    return !(this.firstTextboxValue === '' || this.secondTextboxValue === '');
+    fromEvent(secondTextbox, 'input')
+      .pipe(
+        map<Event, boolean>((event) => {
+          this.secondTextboxValue = (event.target as any).value;
+          return !(this.firstTextboxValue === '' || this.secondTextboxValue === '');
+        })
+      )
+      .subscribe((isValid) => {
+        this.isValidInput = isValid;
+      });
   }
 }
